@@ -14,7 +14,7 @@ typedef struct {
     char publishHouse[20];
     char publishDate[12];
     char location[20];
-    char  id[300];
+    char id[300];
     int  amount;
     int  value;
     int  timesBeenrent;
@@ -30,6 +30,35 @@ typedef struct{
     int current_num;
 }Bookslist;
 bool isfirstenter;
+bool checkifISBNisright(Books books){
+    if (books.ISBNcode[3]!='-'&&books.ISBNcode[5]!='-'&&books.ISBNcode[10]!='-'&&books.ISBNcode[15]!='-')
+    {   
+        printf("请输入正确的ISBN编码:");
+        return false;
+    }else{
+        int count=0,index=1;
+        for (int i = 0; i < 16; i++)
+        {
+            if (books.ISBNcode[i]!='-')
+            {
+                if (index%2==1)
+                {
+                    count+=(int)books.ISBNcode[i]-'0';   
+                }else{
+                    count+=((int)books.ISBNcode[i]-'0')*3;   
+                }
+                index++;
+            }
+        }
+        if ((int)books.ISBNcode[16]-'0'==10-count%10)
+        {
+            return true;
+        }else{
+            printf("请输入正确的ISBN编码:");
+            return false;
+        }
+    }
+}
 bool checkifdateisright(Books books){
     if (books.publishDate[4]!='/'&&books.publishDate[7]!='/')
     {
@@ -55,15 +84,12 @@ bool checkID(Books books,Bookslist *h){
 Books initialBookinfo(Books books,Bookslist *h){
             printf("请输入书名：");
             scanf("%s", books.name);
-            printf("是否查看书本分类表（ Y / N ）");
-            char command[3];
-            scanf("%s", command);
-            if (!strcmp(command,"y")||!strcmp(command,"Y"))
-            {
-            explainThetypeofbooks();
-            }
             printf("请输入书的ISBN：");
             scanf("\t%s", books.ISBNcode);
+             while (!checkifISBNisright(books))
+            {
+                scanf("\t%s", books.ISBNcode);
+            }
             printf("请输入作者：");
             scanf("\t%s", books.author);
             printf("请输入出版社：");
@@ -80,6 +106,13 @@ Books initialBookinfo(Books books,Bookslist *h){
             scanf("\t%d", &books.amount);
             printf("请输入书本单价：");
             scanf("\t%d", &books.value);
+            printf("是否查看书本分类表（ Y / N ）");
+            char command[3];
+            scanf("%s", command);
+            if (!strcmp(command,"y")||!strcmp(command,"Y"))
+            {
+            explainThetypeofbooks();
+            }
             printf("请输入书本类型：");
             char type[2];
             scanf("\t%s", type);
@@ -155,9 +188,10 @@ void flush(Bookslist *h){
     else
         printf("没有数据写入 \n");
     }
-void print_goods(Bookslist *h){
-        if(h->current_num <=0)
+void print_books(Bookslist *h){
+        if(h->current_num <=0){
             printf("链表是空的！\n");
+        }
         Node * p = h->head;
         while (p) {
             print_one(p);
@@ -226,7 +260,7 @@ void delete(Bookslist *h){
         printf("书本链表为空 ! \n");
         return;    }
         printf(" 请输入要删除的书本ID（-1：退出）：\n");
-          char id[MAX_ID];
+        char id[MAX_ID];
         scanf("%s", id);
         if(!strcmp(id, "-1"))
             return ;
@@ -234,13 +268,17 @@ void delete(Bookslist *h){
         if(!strcmp(p->book.id, id)){
         h->head = p->next;
         free(p);
-        return ;}
-        while(p->next != NULL && strcmp(p->next->book.id, id))
+        return ;
+        }
+        while(p->next != NULL && strcmp(p->next->book.id, id)){
             p = p->next;
-        if(p->next == NULL)
-            printf("这本书不存在 \n");
+        }
+        if(p->next == NULL){
+              printf("这本书不存在 \n");
+        }
         else{
-            print_one(p->next);}
+            print_one(p->next);
+        }
         if (p==NULL)
         {
             return;
@@ -262,14 +300,16 @@ void update(Bookslist *h){
     printf("请输入要更新的书本ID（-1：退出）： \n");
     char id[MAX_ID];
     scanf("%s", id);
-    if(!strcmp(id, "-1"))
+    if(!strcmp(id, "-1")){
         return;
+    }
     Node *p = h->head;
     while(p != NULL && (strcmp(p->book.id, id))){
         p = p->next;
     }
-    if(p == NULL)
+    if(p == NULL){
         printf("书本不存在\n");
+    }
     else{
         printf("输入新的书本信息 \n");
         p->book=initialBookinfo(p->book,h);
@@ -287,7 +327,7 @@ void maincontral(Bookslist *list){
     scanf("%s", command);
     if (!strcmp(command,"1"))
     {
-        print_goods(list);
+        print_books(list);
     }else if (!strcmp(command,"2"))
     {
         add(list);

@@ -35,11 +35,6 @@ void init(){
         p->reader = reader;
         p->next = head;
         head = p;
-        // printf("%s\n",p->reader.name);
-        // printf("%s\n",p->reader.id);
-        // printf("%s\n",p->reader.phone);
-        // printf("%s\n",p->reader.code);
-        // printf("%d\n\n",p->reader.power);
     }
     fclose(fp);
     printf("系统初始化成功!\n\n");
@@ -211,7 +206,7 @@ void delete_account(node *p){
     log_out();
     printf("注销成功!\n\n");
 }
-void flush(){
+void flush_reader(){
     FILE *fp = fopen("reader.txt","w");
     if(fp == NULL){
         printf("上传数据失败!\n\n");
@@ -267,6 +262,6 @@ int main(){
             }
         }
     }
-    flush();
+    flush_reader();
     return 0;
 }

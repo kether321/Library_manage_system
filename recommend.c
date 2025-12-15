@@ -57,7 +57,6 @@ void updating_times(char *ISBN)
   {
     printf("未找到该ISBN码下的图书!\n");
   }
-   
 }
 
 //按热度排序
@@ -107,6 +106,7 @@ void give_recommendations_by_records()
 
 }
 
+
 //根据借阅历史推荐
 void give_recommendations_by_history(int user_id)
 {   
@@ -126,6 +126,7 @@ void give_recommendations_by_history(int user_id)
         sort[history[i].booksort]++;
        }
     }
+
 
     //找出最喜欢的类别
     int maxcount=0;               //某类别最大借阅次数
@@ -166,6 +167,8 @@ void give_recommendations_by_history(int user_id)
     printf("==================================\n");
 }
 
+
+//操作菜单
 int main(){
     init_test_data();
     int choose;
